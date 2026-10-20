@@ -11,13 +11,16 @@ const nativePlugin = registerPlugin<PurchasesPlugin>('Purchases', {
   web: () => import('./web').then((m) => new m.PurchasesWeb()),
 });
 
-function normalizeRejection(result: unknown): unknown {
+function normalizeRejection(result: unknown, methodName: string | symbol): unknown {
   if (!(result instanceof Promise)) {
     return result;
   }
-  const normalized = result.then(undefined, (error: unknown) => {
-    throw normalizePurchasesError(error);
-  });
+  const normalized = result.then(
+    (value) => (methodName === 'getCurrentOfferingForPlacement' ? (value ?? null) : value),
+    (error: unknown) => {
+      throw normalizePurchasesError(error);
+    },
+  );
   // addListener resolves a promise that also carries `remove`, for callers on the
   // deprecated non-awaited style; chaining would drop it.
   const remove = (result as { remove?: unknown }).remove;
@@ -66,7 +69,8 @@ const Purchases = new Proxy(nativePlugin, {
     // An apply trap keeps whatever Capacitor puts on the method it hands back, such as
     // the `name` and `toString` that logs and crash reports read.
     return new Proxy(value as (...callArgs: unknown[]) => unknown, {
-      apply: (method, _thisArg, args) => normalizeRejection(Reflect.apply(method, target, toNativeArgs(prop, args))),
+      apply: (method, _thisArg, args) =>
+        normalizeRejection(Reflect.apply(method, target, toNativeArgs(prop, args)), prop),
     });
   },
 }) as PurchasesPlugin;
