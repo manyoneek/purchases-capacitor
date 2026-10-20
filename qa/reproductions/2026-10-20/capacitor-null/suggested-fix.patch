@@ -1,0 +1,82 @@
+diff --git a/__tests__/placementNullContract.test.ts b/__tests__/placementNullContract.test.ts
+new file mode 100644
+index 0000000..9c4e13f
+--- /dev/null
++++ b/__tests__/placementNullContract.test.ts
+@@ -0,0 +1,41 @@
++import { Purchases } from '../src/index';
++
++// Unit boundary regression. The actual iOS helper + Capacitor serializer emit undefined
++// for a nil offering. Separate native-app evidence establishes reachability without mocks.
++const nativePlacement = jest.fn();
++const nativeVoid = jest.fn(() => Promise.resolve(undefined));
++jest.mock('@capacitor/core', () => ({
++  registerPlugin: () => ({
++    getCurrentOfferingForPlacement: (...args: unknown[]) => nativePlacement(...args),
++    invalidateCustomerInfoCache: () => nativeVoid(),
++  }),
++}));
++
++beforeEach(() => jest.clearAllMocks());
++it('maps the native absent offering to the documented null', async () => {
++  nativePlacement.mockResolvedValueOnce(undefined);
++  await expect(Purchases.getCurrentOfferingForPlacement({ placementIdentifier: 'none' })).resolves.toBeNull();
++});
++it('supports a consumer that checks only the documented null', async () => {
++  nativePlacement.mockResolvedValueOnce(undefined);
++  const offering = await Purchases.getCurrentOfferingForPlacement({ placementIdentifier: 'none' });
++  expect(() => (offering !== null ? offering.identifier : 'No offering')).not.toThrow();
++});
++it('preserves an existing offering and forwards the placement identifier', async () => {
++  const offering = { identifier: 'control' };
++  nativePlacement.mockResolvedValueOnce(offering);
++  await expect(Purchases.getCurrentOfferingForPlacement({ placementIdentifier: 'control' })).resolves.toBe(offering);
++  expect(nativePlacement).toHaveBeenCalledWith({ placementIdentifier: 'control' });
++});
++it('preserves an explicit null', async () => {
++  nativePlacement.mockResolvedValueOnce(null);
++  await expect(Purchases.getCurrentOfferingForPlacement({ placementIdentifier: 'none' })).resolves.toBeNull();
++});
++it('keeps errors as rejections', async () => {
++  const error = new Error('failure');
++  nativePlacement.mockRejectedValueOnce(error);
++  await expect(Purchases.getCurrentOfferingForPlacement({ placementIdentifier: 'none' })).rejects.toBe(error);
++});
++it('does not change unrelated void results', async () => {
++  await expect(Purchases.invalidateCustomerInfoCache()).resolves.toBeUndefined();
++});
+diff --git a/src/index.ts b/src/index.ts
+index d5fcdf5..af14bd7 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -11,13 +11,16 @@ const nativePlugin = registerPlugin<PurchasesPlugin>('Purchases', {
+   web: () => import('./web').then((m) => new m.PurchasesWeb()),
+ });
+ 
+-function normalizeRejection(result: unknown): unknown {
++function normalizeRejection(result: unknown, methodName: string | symbol): unknown {
+   if (!(result instanceof Promise)) {
+     return result;
+   }
+-  const normalized = result.then(undefined, (error: unknown) => {
+-    throw normalizePurchasesError(error);
+-  });
++  const normalized = result.then(
++    (value) => (methodName === 'getCurrentOfferingForPlacement' ? (value ?? null) : value),
++    (error: unknown) => {
++      throw normalizePurchasesError(error);
++    },
++  );
+   // addListener resolves a promise that also carries `remove`, for callers on the
+   // deprecated non-awaited style; chaining would drop it.
+   const remove = (result as { remove?: unknown }).remove;
+@@ -66,7 +69,8 @@ const Purchases = new Proxy(nativePlugin, {
+     // An apply trap keeps whatever Capacitor puts on the method it hands back, such as
+     // the `name` and `toString` that logs and crash reports read.
+     return new Proxy(value as (...callArgs: unknown[]) => unknown, {
+-      apply: (method, _thisArg, args) => normalizeRejection(Reflect.apply(method, target, toNativeArgs(prop, args))),
++      apply: (method, _thisArg, args) =>
++        normalizeRejection(Reflect.apply(method, target, toNativeArgs(prop, args)), prop),
+     });
+   },
+ }) as PurchasesPlugin;

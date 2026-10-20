@@ -1,0 +1,15 @@
+{
+  "id": "RC-CAPACITOR-20261018-001",
+  "repository": "RevenueCat/purchases-capacitor",
+  "commit": "8365ed83ea234fb65772d0bd08fb343746cfd382",
+  "parentCommit": "c468cc0085b75a955dd141ea27a62a6abf312823",
+  "pullRequest": "https://github.com/RevenueCat/purchases-capacitor/pull/628",
+  "mergedDate": "2025-12-17",
+  "firstStableSourceTag": "11.3.1",
+  "firstReleasePublishedAt": "2025-12-18T09:26:21Z",
+  "classification": "Undefined-success behavior introduced by the earlier null-offering error fix; parent rejected the same nil result, so parent was not a correct-null baseline.",
+  "evidence": "Unmodified RevenueCat helper method bodies from parent, introducing commit and current revision, compiled with actual Capacitor 7.0.0 resolve/reject methods and full PluginCallResult.swift/JS.swift serializers. Host macOS Swift execution; missing framework type declarations supplied by harness. Parent rejects nil; introducing/current methods produce JavaScript undefined; present-offering controls pass. Nullable contract already existed in feature PR #222.",
+  "limitations": "No historical full mobile app or backend run. Historical package allowed Capacitor >=7.0.0; no lockfile was committed, so 7.0.0 is a compatible contemporary dependency, not a proven historical resolution. Current full app uses Capacitor 8.4.1.",
+  "investigatedAt": "2026-10-18",
+  "evidenceDirectory": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/runs/2026-10-18/history"
+}

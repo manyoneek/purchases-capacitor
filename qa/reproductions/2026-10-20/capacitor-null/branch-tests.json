@@ -1,0 +1,107 @@
+[
+  {
+    "label": "install",
+    "command": [
+      "corepack",
+      "yarn",
+      "install",
+      "--frozen-lockfile"
+    ],
+    "cwd": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/capacitor-null",
+    "exit": 0,
+    "log": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/logs/capacitor-null-install.log",
+    "seconds": 6.55
+  },
+  {
+    "label": "regression-before",
+    "command": [
+      "npm",
+      "test",
+      "--",
+      "--runInBand",
+      "placementNullContract.test.ts"
+    ],
+    "cwd": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/capacitor-null",
+    "exit": 1,
+    "log": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/logs/capacitor-null-regression-before.log",
+    "seconds": 1.91
+  },
+  {
+    "label": "regression-after",
+    "command": [
+      "npm",
+      "test",
+      "--",
+      "--runInBand",
+      "placementNullContract.test.ts"
+    ],
+    "cwd": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/capacitor-null",
+    "exit": 0,
+    "log": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/logs/capacitor-null-regression-after.log",
+    "seconds": 1.39
+  },
+  {
+    "label": "full-after",
+    "command": [
+      "npm",
+      "test",
+      "--",
+      "--runInBand"
+    ],
+    "cwd": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/capacitor-null",
+    "exit": 0,
+    "log": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/logs/capacitor-null-full-after.log",
+    "seconds": 1.42
+  },
+  {
+    "label": "format",
+    "command": [
+      "npx",
+      "prettier",
+      "--write",
+      "src/index.ts",
+      "__tests__/placementNullContract.test.ts"
+    ],
+    "cwd": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/capacitor-null",
+    "exit": 0,
+    "log": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/logs/capacitor-null-format.log",
+    "seconds": 0.67
+  },
+  {
+    "label": "lint",
+    "command": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "cwd": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/capacitor-null",
+    "exit": 1,
+    "log": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/logs/capacitor-null-lint.log",
+    "seconds": 1.82
+  },
+  {
+    "label": "build",
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/capacitor-null",
+    "exit": 0,
+    "log": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/logs/capacitor-null-build.log",
+    "seconds": 7.24
+  },
+  {
+    "label": "full-after-format",
+    "command": [
+      "npm",
+      "test",
+      "--",
+      "--runInBand"
+    ],
+    "cwd": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/capacitor-null",
+    "exit": 0,
+    "log": "<local-user>/.openclaw/workspace/projects/revenuecat-bug-reporter/publication/2026-10-20/logs/capacitor-null-full-after-format.log",
+    "seconds": 1.77
+  }
+]
