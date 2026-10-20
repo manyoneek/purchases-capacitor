@@ -1,0 +1,40 @@
+{
+  "app": "app4ca00b430f",
+  "failed": 0,
+  "passed": 6,
+  "platform": "iOS simulator",
+  "project": "proj602cc762",
+  "rows": [
+    {
+      "detail": "iOS \u00b7 Test Store \u00b7 SDK Bug Reporter",
+      "name": "Actual SDK configured",
+      "passed": true
+    },
+    {
+      "detail": "Live Test Store response; no injected callbacks",
+      "name": "Customer info received",
+      "passed": true
+    },
+    {
+      "detail": "Current offering: default",
+      "name": "Non-empty offering control",
+      "passed": true
+    },
+    {
+      "detail": "Unknown placement still resolves to default",
+      "name": "Placement fallback preserved",
+      "passed": true
+    },
+    {
+      "detail": "Expected null; received null (typeof object)",
+      "name": "No-offering placement returns null",
+      "passed": true
+    },
+    {
+      "detail": "Consumer result: No offering",
+      "name": "Documented null guard is safe",
+      "passed": true
+    }
+  ],
+  "sdk": "purchases-capacitor"
+}
