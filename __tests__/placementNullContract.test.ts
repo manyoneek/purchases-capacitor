@@ -1,7 +1,5 @@
 import { Purchases } from '../src/index';
 
-// Unit boundary regression. The actual iOS helper + Capacitor serializer emit undefined
-// for a nil offering. Separate native-app evidence establishes reachability without mocks.
 const nativePlacement = jest.fn();
 const nativeVoid = jest.fn(() => Promise.resolve(undefined));
 jest.mock('@capacitor/core', () => ({
